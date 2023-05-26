@@ -7,6 +7,6 @@ export default function canvasSize(canvas: {height: number; width: number}) {
     canvas.width = window.innerWidth / 1.2;
   } else {
     canvas.height = window.innerHeight / 1.5;
-    canvas.width = window.innerWidth / 2;
+    canvas.width = window.innerWidth / 2.1;
   }
 }

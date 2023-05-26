@@ -11,17 +11,11 @@ import getMousePos from 'app/utils/mouse-pos-helper';
   templateUrl: './emojis.component.html',
   styleUrls: ['./emojis.component.scss'],
 })
-export class EmojisComponent implements AfterViewInit, OnInit {
-  ngAfterViewInit(): void {}
-  @ViewChild('canvas', {static: false}) canvas: ElementRef;
-  canvasPos: {x: number; y: number};
-  static canvas: ElementRef<any>;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  @HostListener('mousedown', ['$event']) onMouseDown(event: any) {
-    this.mousePos = {x: event.clientX, y: event.clientY};
+export class EmojisComponent implements OnInit {
+  ngOnInit(): void {
+    this.getEmojis(this.id);
   }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   emojis: RenderedEmoji[];
   id: number = 0;
@@ -29,11 +23,8 @@ export class EmojisComponent implements AfterViewInit, OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
-    this.getEmojis(this.id);
-  }
-
   emojiList = `https://emoji-api.com/emojis?access_key=b2d5f5b8a462e384858bbfeaf3f0bf1b84fcd82e`;
+
   getEmojis(id: number) {
     this.http.get<RenderedEmoji[]>(this.emojiList).subscribe((response: RenderedEmoji[]) => {
       this.emojis = [];
@@ -44,7 +35,7 @@ export class EmojisComponent implements AfterViewInit, OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    const nextPage = event.pageIndex + 20;
+    const nextPage = event.pageIndex * 10;
     this.getEmojis(nextPage);
   }
   firstEmoji() {
@@ -54,8 +45,8 @@ export class EmojisComponent implements AfterViewInit, OnInit {
 
   copyAndPasteEmoji(emoji: Emoji) {
     let canvas = CanvasHelper.getCanvas();
-    let ctx = CanvasHelper.getCtx(canvas);
-    ctx.font = '10vh verdana';
+    let ctx = canvas.getContext('2d');
+    ctx.font = '8vh verdana';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 

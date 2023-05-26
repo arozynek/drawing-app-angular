@@ -1,27 +1,29 @@
-<section id="rendered-elements" class="single-section left">
-  <div class="emojis">
-    <app-emojis></app-emojis>
-  </div>
-</section>
+<div class="draw-new-image-container">
+  <section id="rendered-elements" class="single-section left">
+    <div class="emojis">
+      <app-emojis></app-emojis>
+    </div>
+  </section>
 
-<canvas id="canvas" width="300" height="350" class="single-section"
-  >The canva is error</canvas
->
-<section id="buttons" class="single-section right">
-  <button
-    id="clear-button"
-    class="btn"
-    title="Deleted projects are displayed in PREVIOUS PROJECTS section"
-    (click)="clear()"
+  <canvas id="canvas" width="300" height="350" class="single-section"
+    >The canva is error</canvas
   >
-    Clear canvas
-  </button>
-  <a
-    id="save-button"
-    class="btn"
-    [href]="imgLink()"
-    [download]="'IMAGE.jpeg'"
-    (click)="imgLink()"
-    >Save as jpeg</a
-  >
-</section>
+  <section id="buttons" class="single-section right">
+    <button
+      id="clear-button"
+      class="btn"
+      title="Deleted projects are displayed in PREVIOUS PROJECTS section"
+      (click)="clear()"
+    >
+      Clear canvas
+    </button>
+    <a
+      id="save-button"
+      class="btn"
+      [href]="imgLink()"
+      [download]="'IMAGE.jpeg'"
+      (click)="imgLink()"
+      >Save as jpeg</a
+    >
+  </section>
+</div>

@@ -2,7 +2,7 @@
   text-align: center;
 }
 #about-me img {
-  max-width: 30vh;
+  max-width: 25vh;
   max-height: fit-content;
 }
 .text {
@@ -13,4 +13,9 @@
   justify-content: space-between;
   max-width: 100vh;
   margin: auto;
+}
+.tech-stack {
+  list-style-type: none;
+  font-size: medium;
+  font-weight: bold;
 }

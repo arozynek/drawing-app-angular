@@ -1,20 +1,24 @@
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Emoji} from './model/emoji';
 import {RenderedEmoji} from './model/rendered-emojis';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import CanvasHelper from 'app/utils/canvas-pos-helper';
+import getMousePos from 'app/utils/mouse-pos-helper';
 
 @Component({
   selector: 'app-emojis',
   templateUrl: './emojis.component.html',
   styleUrls: ['./emojis.component.scss'],
 })
-export class EmojisComponent implements OnInit {
+export class EmojisComponent implements AfterViewInit, OnInit {
+  ngAfterViewInit(): void {}
   @ViewChild('canvas', {static: false}) canvas: ElementRef;
   canvasPos: {x: number; y: number};
   static canvas: ElementRef<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
   @HostListener('mousedown', ['$event']) onMouseDown(event: any) {
     this.mousePos = {x: event.clientX, y: event.clientY};
   }
@@ -49,23 +53,25 @@ export class EmojisComponent implements OnInit {
   }
 
   copyAndPasteEmoji(emoji: Emoji) {
-    let canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    let ctx = canvas.getContext('2d');
+    let canvas = CanvasHelper.getCanvas();
+    let ctx = CanvasHelper.getCtx(canvas);
     ctx.font = '10vh verdana';
-    // ctx.textAlign = 'center';
-    // ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
     canvas.addEventListener(
       'click',
-      () => {
-        ctx.fillText(emoji.character, this.mousePos.x, this.mousePos.y);
+      e => {
+        var mousePos = getMousePos(canvas, e);
+        ctx.fillText(emoji.character, mousePos.x, mousePos.y);
       },
       {once: true},
     );
     canvas.addEventListener(
       'touchstart',
-      () => {
-        ctx.fillText(emoji.character, this.mousePos.x, this.mousePos.y);
+      e => {
+        var mousePos = getMousePos(canvas, e);
+        ctx.fillText(emoji.character, mousePos.x, mousePos.y);
       },
       {once: true},
     );

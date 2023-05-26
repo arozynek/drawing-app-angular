@@ -1,23 +1,15 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import CanvasHelper from 'app/utils/canvas-pos-helper';
 
 @Component({
   selector: 'app-draw',
   templateUrl: './draw.component.html',
   styleUrls: ['./draw.component.scss'],
 })
-export class DrawComponent implements OnInit {
-  @ViewChild('canvas', {static: false}) canvas: ElementRef;
-  canvasPos: {x: number, y:number};
-  static canvas: ElementRef<any>;
-
-  getCanvas() {
-    let canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    return canvas;
-  }
+export class DrawComponent implements AfterViewInit {
   constructor() {}
-  ngOnInit(): void {};
   ngAfterViewInit() {
-    let canvas = this.getCanvas();
+    let canvas = CanvasHelper.getCanvas();
     canvas.width = window.innerWidth - window.innerWidth / 3;
     canvas.height = window.innerHeight - window.innerHeight / 2;
 
@@ -51,7 +43,7 @@ export class DrawComponent implements OnInit {
         return {
           x: clientX - left,
           y: clientY - top,
-        }
+        };
       } else {
         return {
           x: ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width,
@@ -59,7 +51,7 @@ export class DrawComponent implements OnInit {
         };
       }
     }
-    
+
     // PAINTING
 
     let painting = false;
@@ -80,7 +72,6 @@ export class DrawComponent implements OnInit {
       ctx.stroke();
       ctx.save();
     }
-  
 
     // Canvas event listeners
     canvas.addEventListener('mousedown', startPosition);
@@ -89,17 +80,16 @@ export class DrawComponent implements OnInit {
     canvas.addEventListener('touchstart', startPosition);
     canvas.addEventListener('touchend', finishPosition);
     canvas.addEventListener('touchmove', draw);
-
   }
   clear() {
-    let canvas = this.getCanvas();
+    let canvas = CanvasHelper.getCanvas();
     let ctx = canvas.getContext('2d');
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   imgLink() {
-    let canvas = this.getCanvas();
+    let canvas = CanvasHelper.getCanvas();
     const link = canvas.toDataURL('image/png');
     return link;
   }

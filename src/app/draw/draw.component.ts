@@ -1,5 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import CanvasHelper from 'app/utils/canvas-pos-helper';
+import canvasSize from 'app/utils/canvas-size';
+import getMousePos from 'app/utils/mouse-pos-helper';
 
 @Component({
   selector: 'app-draw',
@@ -10,47 +12,13 @@ export class DrawComponent implements AfterViewInit {
   constructor() {}
   ngAfterViewInit() {
     let canvas = CanvasHelper.getCanvas();
-    canvas.width = window.innerWidth - window.innerWidth / 3;
-    canvas.height = window.innerHeight - window.innerHeight / 2;
 
-    let ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    function canvasSize() {
-      if (window.matchMedia('(max-width: 600px)').matches) {
-        canvas.height = window.innerHeight / 2.5;
-        canvas.width = window.innerWidth / 1;
-      } else if (window.matchMedia('(max-width: 768px)').matches) {
-        canvas.height = window.innerHeight / 3;
-        canvas.width = window.innerWidth / 1.2;
-      } else {
-        canvas.height = window.innerHeight / 1.5;
-        canvas.width = window.innerWidth / 2;
-      }
-    }
-    canvasSize();
+    canvasSize(canvas);
     window.addEventListener('resize', () => {
-      canvasSize();
+      canvasSize(canvas);
     });
 
-    // Canvas position
-    function getMousePos(canvas: any, e: any) {
-      var rect = canvas.getBoundingClientRect();
-      if (window.matchMedia('(max-width: 600px)').matches) {
-        const {clientX, clientY} = e.touches[0];
-        const {left, top} = rect;
-        return {
-          x: clientX - left,
-          y: clientY - top,
-        };
-      } else {
-        return {
-          x: ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width,
-          y: ((e.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height,
-        };
-      }
-    }
+    let ctx = CanvasHelper.getCtx(canvas);
 
     // PAINTING
 
@@ -83,9 +51,7 @@ export class DrawComponent implements AfterViewInit {
   }
   clear() {
     let canvas = CanvasHelper.getCanvas();
-    let ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    CanvasHelper.getCtx(canvas);
   }
 
   imgLink() {
